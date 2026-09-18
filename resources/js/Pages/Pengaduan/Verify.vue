@@ -3,6 +3,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import InputError from '@/Components/InputError.vue';
 import StatusBadge from '@/Components/StatusBadge.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
+import { STATUS_LABEL as statusLabel } from '@/lib/status.js';
 
 const props = defineProps({ item: Object });
 
@@ -54,7 +55,7 @@ const fmt = (d) => new Date(d).toLocaleString('id-ID', { day: 'numeric', month: 
                         <ol class="mt-3 space-y-3">
                             <li v-for="l in item.logs" :key="l.id" class="flex gap-3 text-sm">
                                 <span class="mt-1.5 size-2 shrink-0 rounded-full bg-orange-400"></span>
-                                <p class="text-gray-600"><strong class="text-gray-900">{{ l.status_baru.replaceAll('_', ' ') }}</strong> — {{ l.updater?.name }} · {{ fmt(l.created_at) }}<span v-if="l.catatan" class="block">{{ l.catatan }}</span></p>
+                                <p class="text-gray-600"><strong class="text-gray-900">{{ statusLabel[l.status_baru] ?? l.status_baru }}</strong> — {{ l.updater?.name }} · {{ fmt(l.created_at) }}<span v-if="l.catatan" class="block">{{ l.catatan }}</span></p>
                             </li>
                         </ol>
                     </div>
@@ -79,7 +80,7 @@ const fmt = (d) => new Date(d).toLocaleString('id-ID', { day: 'numeric', month: 
                                     <textarea v-model="verif.catatan" rows="3" placeholder="Tulis alasan yang jelas — akan dibaca pelapor." :class="inputCls + ' mt-1'" />
                                     <InputError :message="verif.errors.catatan" />
                                 </div>
-                                <button :disabled="verif.processing" class="w-full rounded-xl bg-orange-600 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-orange-600/25 transition hover:bg-orange-700 disabled:opacity-50">Simpan Keputusan</button>
+                                <button :disabled="verif.processing" class="w-full rounded-xl bg-orange-600 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-orange-600/25 transition hover:bg-orange-700 disabled:opacity-50">{{ verif.processing ? 'Menyimpan…' : 'Simpan Keputusan' }}</button>
                             </form>
                         </template>
 
@@ -98,13 +99,13 @@ const fmt = (d) => new Date(d).toLocaleString('id-ID', { day: 'numeric', month: 
                                     <label class="text-sm font-bold text-gray-700">Catatan progres</label>
                                     <textarea v-model="statusForm.catatan" rows="3" placeholder="cth: Tim DLH meluncur ke lokasi pagi ini." :class="inputCls + ' mt-1'" />
                                 </div>
-                                <button :disabled="statusForm.processing" class="w-full rounded-xl bg-gray-900 px-6 py-3 text-sm font-bold text-white transition hover:bg-gray-700 disabled:opacity-50">Simpan Update</button>
+                                <button :disabled="statusForm.processing" class="w-full rounded-xl bg-gray-900 px-6 py-3 text-sm font-bold text-white transition hover:bg-gray-700 disabled:opacity-50">{{ statusForm.processing ? 'Menyimpan…' : 'Simpan Update' }}</button>
                             </form>
                         </template>
 
                         <template v-else>
                             <h3 class="text-lg font-extrabold">Tidak ada aksi</h3>
-                            <p class="mt-2 text-sm leading-relaxed text-gray-600">Laporan berstatus <strong>{{ item.status.replaceAll('_', ' ') }}</strong> dan tidak memerlukan tindakan lagi.</p>
+                            <p class="mt-2 text-sm leading-relaxed text-gray-600">Laporan berstatus <strong>{{ statusLabel[item.status] ?? item.status }}</strong> dan tidak memerlukan tindakan lagi.</p>
                             <Link :href="route('pengaduan.index')" class="mt-4 inline-block rounded-xl bg-gray-900 px-5 py-2.5 text-sm font-bold text-white">Kembali ke antrean</Link>
                         </template>
                     </div>

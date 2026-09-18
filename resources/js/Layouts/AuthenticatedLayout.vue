@@ -29,7 +29,7 @@ const roleLabel = { pelapor: 'Pelapor', petugas: 'Petugas', admin: 'Admin' };
                             </div>
 
                             <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink :href="route('dashboard')" :active="route().current('dashboard')">Dashboard</NavLink>
+                                <NavLink :href="route('dashboard')" :active="route().current('dashboard')">Dasbor</NavLink>
                                 <NavLink :href="route('pengaduan.index')" :active="route().current('pengaduan.*')">Pengaduan</NavLink>
                                 <NavLink v-if="user.role === 'admin'" :href="route('admin.dashboard')" :active="route().current('admin.*')">Admin</NavLink>
                             </div>
@@ -70,7 +70,7 @@ const roleLabel = { pelapor: 'Pelapor', petugas: 'Petugas', admin: 'Admin' };
 
                 <div :class="{ block: showingNavigationDropdown, hidden: !showingNavigationDropdown }" class="sm:hidden">
                     <div class="space-y-1 pb-3 pt-2">
-                        <ResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">Dashboard</ResponsiveNavLink>
+                        <ResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">Dasbor</ResponsiveNavLink>
                         <ResponsiveNavLink :href="route('pengaduan.index')" :active="route().current('pengaduan.*')">Pengaduan</ResponsiveNavLink>
                         <ResponsiveNavLink v-if="user.role === 'admin'" :href="route('admin.dashboard')" :active="route().current('admin.*')">Admin</ResponsiveNavLink>
                     </div>

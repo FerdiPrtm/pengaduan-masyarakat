@@ -3,6 +3,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import StatusBadge from '@/Components/StatusBadge.vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { reactive, watch } from 'vue';
+import { STATUS_LABEL as statusLabel } from '@/lib/status.js';
 
 const props = defineProps({
     items: Object,
@@ -10,8 +11,6 @@ const props = defineProps({
     kategoris: Array,
     statuses: Array,
 });
-
-const statusLabel = { menunggu_verifikasi: 'Menunggu Verifikasi', butuh_info_tambahan: 'Butuh Info', diverifikasi: 'Diverifikasi', ditolak: 'Ditolak', diproses: 'Diproses', selesai: 'Selesai' };
 
 const f = reactive({
     status: props.filters?.status ?? '',

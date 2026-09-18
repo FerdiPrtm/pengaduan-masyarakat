@@ -30,7 +30,7 @@ const inputCls = 'block w-full rounded-xl border-gray-200 text-sm shadow-sm focu
                             <input v-model="form.unit_penanggung_jawab" placeholder="cth: Dinas Perhubungan" :class="inputCls + ' mt-1'" />
                         </div>
                         <p v-if="form.errors.nama_kategori" class="text-sm font-medium text-red-600">{{ form.errors.nama_kategori }}</p>
-                        <button class="w-full rounded-xl bg-orange-600 px-4 py-2.5 text-sm font-bold text-white shadow transition hover:bg-orange-700">Tambah Kategori</button>
+                        <button :disabled="form.processing" class="w-full rounded-xl bg-orange-600 px-4 py-2.5 text-sm font-bold text-white shadow transition hover:bg-orange-700 disabled:opacity-50">{{ form.processing ? 'Menambah…' : 'Tambah Kategori' }}</button>
                     </form>
                 </div>
                 <div class="overflow-hidden rounded-2xl border border-gray-200/70 bg-white shadow-sm lg:col-span-3">

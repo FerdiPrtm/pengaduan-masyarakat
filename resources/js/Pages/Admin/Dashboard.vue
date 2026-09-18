@@ -2,10 +2,10 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link } from '@inertiajs/vue3';
 import { computed } from 'vue';
+import { STATUS_LABEL as statusLabel } from '@/lib/status.js';
 
 const props = defineProps({ perStatus: Object, perKategori: Object, total: Number });
 
-const statusLabel = { menunggu_verifikasi: 'Menunggu Verifikasi', butuh_info_tambahan: 'Butuh Info', diverifikasi: 'Diverifikasi', ditolak: 'Ditolak', diproses: 'Diproses', selesai: 'Selesai' };
 const barColor = { menunggu_verifikasi: 'bg-amber-400', butuh_info_tambahan: 'bg-purple-400', diverifikasi: 'bg-blue-400', ditolak: 'bg-red-400', diproses: 'bg-indigo-500', selesai: 'bg-green-500' };
 
 const maxStatus = computed(() => Math.max(1, ...Object.values(props.perStatus)));
@@ -16,13 +16,13 @@ const pct = (v, m) => Math.round((v / m) * 100);
 
 const cards = computed(() => [
     { t: 'Total Laporan', v: props.total, d: 'keseluruhan', bg: 'bg-gray-900' },
-    { t: 'Antre Verifikasi', v: antre.value, d: 'perlu perhatian', bg: 'bg-amber-500' },
-    { t: 'Selesai', v: selesai.value, d: props.total ? Math.round((selesai.value / props.total) * 100) + '% tuntas' : '—', bg: 'bg-green-600' },
+    { t: 'Antre Verifikasi', v: antre.value, d: 'perlu perhatian', bg: 'bg-amber-600' },
+    { t: 'Selesai', v: selesai.value, d: props.total ? Math.round((selesai.value / props.total) * 100) + '% tuntas' : '—', bg: 'bg-green-700' },
 ]);
 </script>
 
 <template>
-    <Head title="Admin Dashboard" />
+    <Head title="Dasbor Admin" />
     <AuthenticatedLayout>
         <template #header>
             <div class="flex flex-wrap items-center justify-between gap-3">

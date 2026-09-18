@@ -1,5 +1,8 @@
 <script setup>
+import { ref } from 'vue';
 import { Head, Link } from '@inertiajs/vue3';
+
+const menuOpen = ref(false);
 
 defineProps({
     canLogin: Boolean,
@@ -50,7 +53,19 @@ const avatarBg = ['bg-orange-100 text-orange-700', 'bg-blue-100 text-blue-700', 
                             <Link v-if="canRegister" :href="route('register')" class="rounded-lg bg-orange-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-orange-700">Buat Laporan</Link>
                         </template>
                     </template>
+                    <button @click="menuOpen = !menuOpen" aria-label="Menu navigasi" class="rounded-lg p-2 text-gray-600 transition hover:bg-gray-100 md:hidden">
+                        <svg v-if="!menuOpen" class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
+                        <svg v-else class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18" /></svg>
+                    </button>
                 </div>
+            </div>
+            <div v-if="menuOpen" class="border-t border-gray-100 bg-white px-4 py-3 md:hidden">
+                <nav class="grid gap-1 text-sm font-semibold text-gray-700" @click="menuOpen = false">
+                    <a href="#kategori" class="rounded-lg px-3 py-2.5 transition hover:bg-orange-50 hover:text-orange-700">Kategori</a>
+                    <a href="#cara" class="rounded-lg px-3 py-2.5 transition hover:bg-orange-50 hover:text-orange-700">Cara Melapor</a>
+                    <a href="#faq" class="rounded-lg px-3 py-2.5 transition hover:bg-orange-50 hover:text-orange-700">FAQ</a>
+                    <Link v-if="canLogin && !$page.props.auth.user" :href="route('login')" class="rounded-lg px-3 py-2.5 transition hover:bg-orange-50 hover:text-orange-700">Masuk</Link>
+                </nav>
             </div>
         </header>
 
@@ -82,6 +97,7 @@ const avatarBg = ['bg-orange-100 text-orange-700', 'bg-blue-100 text-blue-700', 
 
                 <!-- Visual: mockup kartu tiket -->
                 <div class="relative mx-auto w-full max-w-md">
+                    <p class="absolute -top-3 left-6 z-10 rounded-full bg-gray-900 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-white shadow">Contoh tampilan</p>
                     <div class="rounded-2xl border border-gray-100 bg-white p-5 shadow-2xl shadow-orange-900/10">
                         <div class="flex items-center justify-between">
                             <p class="font-mono text-xs font-bold text-gray-400">PGD-20260918-0001</p>

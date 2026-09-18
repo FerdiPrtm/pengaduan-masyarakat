@@ -4,6 +4,7 @@ import InputError from '@/Components/InputError.vue';
 import StatusBadge from '@/Components/StatusBadge.vue';
 import { Head, Link, useForm, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
+import { STATUS_FLOW as flow, STATUS_LABEL as statusLabel } from '@/lib/status.js';
 
 const props = defineProps({ item: Object });
 const user = computed(() => usePage().props.auth.user);
@@ -20,8 +21,6 @@ const edit = useForm({
     _method: 'PUT',
 });
 
-const flow = ['menunggu_verifikasi', 'diverifikasi', 'diproses', 'selesai'];
-const flowLabel = { menunggu_verifikasi: 'Diajukan', diverifikasi: 'Diverifikasi', diproses: 'Diproses', selesai: 'Selesai' };
 const stepIdx = computed(() => flow.indexOf(props.item.status));
 const inFlow = computed(() => stepIdx.value >= 0);
 const fmt = (d) => new Date(d).toLocaleString('id-ID', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
@@ -48,7 +47,7 @@ const inputCls = 'block w-full rounded-xl border-gray-200 text-sm shadow-sm focu
                             <template v-for="(s, i) in flow" :key="s">
                                 <div class="flex flex-col items-center gap-1.5">
                                     <span :class="['flex size-8 items-center justify-center rounded-full text-xs font-extrabold ring-4', i <= stepIdx ? 'bg-orange-600 text-white ring-orange-100' : 'bg-gray-100 text-gray-400 ring-gray-50']">{{ i <= stepIdx ? '✓' : i + 1 }}</span>
-                                    <span :class="['text-[11px] font-bold', i <= stepIdx ? 'text-gray-900' : 'text-gray-400']">{{ flowLabel[s] }}</span>
+                                    <span :class="['text-[11px] font-bold', i <= stepIdx ? 'text-gray-900' : 'text-gray-400']">{{ statusLabel[s] }}</span>
                                 </div>
                                 <div v-if="i < flow.length - 1" :class="['mx-1 mb-5 h-1 flex-1 rounded-full', i < stepIdx ? 'bg-orange-500' : 'bg-gray-100']"></div>
                             </template>
@@ -98,7 +97,7 @@ const inputCls = 'block w-full rounded-xl border-gray-200 text-sm shadow-sm focu
                             <textarea v-model="edit.deskripsi" rows="4" aria-label="Deskripsi" :class="inputCls" />
                             <input v-model="edit.lokasi" aria-label="Lokasi" :class="inputCls" />
                             <InputError :message="edit.errors.judul || edit.errors.deskripsi" />
-                            <button class="rounded-xl bg-purple-700 px-6 py-2.5 text-sm font-bold text-white transition hover:bg-purple-800">Simpan & Kirim Ulang</button>
+                            <button :disabled="edit.processing" class="rounded-xl bg-purple-700 px-6 py-2.5 text-sm font-bold text-white transition hover:bg-purple-800 disabled:opacity-50">{{ edit.processing ? 'Mengirim…' : 'Simpan & Kirim Ulang' }}</button>
                         </form>
                     </div>
                 </div>
@@ -113,7 +112,7 @@ const inputCls = 'block w-full rounded-xl border-gray-200 text-sm shadow-sm focu
                                 <span v-if="i < item.logs.length - 1" class="w-0.5 flex-1 bg-gray-200"></span>
                             </div>
                             <div class="min-w-0 flex-1 text-sm">
-                                <p class="font-bold text-gray-900">{{ l.status_baru.replaceAll('_', ' ') }}</p>
+                                <p class="font-bold text-gray-900">{{ statusLabel[l.status_baru] ?? l.status_baru }}</p>
                                 <p v-if="l.hasil_verifikasi" class="mt-0.5 inline-block rounded bg-gray-100 px-1.5 py-0.5 text-[11px] font-semibold text-gray-600">hasil: {{ l.hasil_verifikasi }}</p>
                                 <p v-if="l.catatan" class="mt-1 leading-relaxed text-gray-600">{{ l.catatan }}</p>
                                 <p class="mt-1 text-xs text-gray-400">{{ l.updater?.name }} · {{ fmt(l.created_at) }}</p>
