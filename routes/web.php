@@ -57,6 +57,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 'selesai' => (clone $mine)->where('status', 'selesai')->count(),
             ],
             'recent' => (clone $mine)->with('kategori')->latest()->take(5)->get(),
+            'perhatian' => (clone $mine)->where('status', 'butuh_info_tambahan')->latest()->take(3)->get(['id', 'nomor_tiket', 'judul']),
         ]);
     })->name('dashboard');
 
