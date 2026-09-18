@@ -4,6 +4,16 @@ Laravel 12 + Vue 3 (Inertia, monolith di `resources/js`) + SQLite (WAL).
 
 ![Screenshot aplikasi](screenshot.png)
 
+## Tampilan aplikasi (asli, diambil dari build terbaru)
+
+| Beranda | Dasbor Admin |
+|---|---|
+| ![Beranda](screenshot-beranda.png) | ![Dasbor Admin](screenshot-dasbor-admin.png) |
+
+| Dasbor Petugas | Dasbor Pelapor |
+|---|---|
+| ![Dasbor Petugas](screenshot-dasbor-petugas.png) | ![Dasbor Pelapor](screenshot-dasbor-pelapor.png) |
+
 ## Jalankan lokal (XAMPP / PHP 8.2+)
 
 ```bash
