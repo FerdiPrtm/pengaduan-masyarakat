@@ -2,6 +2,8 @@
 
 Laravel 12 + Vue 3 (Inertia, monolith di `resources/js`) + SQLite (WAL).
 
+![Screenshot aplikasi](screenshot.png)
+
 ## Jalankan lokal (XAMPP / PHP 8.2+)
 
 ```bash
