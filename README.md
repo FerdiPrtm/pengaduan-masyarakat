@@ -5,7 +5,6 @@ Laravel 12 + Vue 3 (Inertia, monolith di `resources/js`) + SQLite (WAL).
 ## Jalankan lokal (XAMPP / PHP 8.2+)
 
 ```bash
-cd web
 composer install
 npm install
 cp .env.example .env   # jika belum ada
