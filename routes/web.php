@@ -24,13 +24,40 @@ Route::get('/', function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', function () {
-        $role = auth()->user()->role;
+        $user = auth()->user();
 
-        return match ($role) {
-            'admin' => redirect()->route('admin.dashboard'),
-            'petugas' => redirect()->route('pengaduan.index'),
-            default => redirect()->route('pengaduan.index'),
-        };
+        if ($user->role === 'admin') {
+            return redirect()->route('admin.dashboard');
+        }
+
+        // Dashboard Petugas: fokus antrean verifikasi (PRD §10)
+        if ($user->isPetugas()) {
+            return Inertia::render('Dashboard', [
+                'role' => 'petugas',
+                'stats' => [
+                    'antre' => Pengaduan::where('status', 'menunggu_verifikasi')->count(),
+                    'diproses' => Pengaduan::whereIn('status', ['diverifikasi', 'diproses'])->count(),
+                    'selesai' => Pengaduan::where('status', 'selesai')->count(),
+                ],
+                'antrean' => Pengaduan::with(['kategori', 'pelapor'])
+                    ->where('status', 'menunggu_verifikasi')
+                    ->latest()->take(8)->get(),
+            ]);
+        }
+
+        // Dashboard Pelapor: ringkasan + laporan terbaru (PRD §10)
+        $mine = Pengaduan::where('user_id', $user->id);
+
+        return Inertia::render('Dashboard', [
+            'role' => 'pelapor',
+            'stats' => [
+                'total' => (clone $mine)->count(),
+                'menunggu' => (clone $mine)->whereIn('status', ['menunggu_verifikasi', 'butuh_info_tambahan'])->count(),
+                'aktif' => (clone $mine)->whereIn('status', ['diverifikasi', 'diproses'])->count(),
+                'selesai' => (clone $mine)->where('status', 'selesai')->count(),
+            ],
+            'recent' => (clone $mine)->with('kategori')->latest()->take(5)->get(),
+        ]);
     })->name('dashboard');
 
     // Pelapor + petugas: daftar & buat (throttle anti-spam)
@@ -43,6 +70,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Petugas: verifikasi + update status
     Route::middleware('role:petugas,admin')->group(function () {
+        Route::get('/pengaduan/{pengaduan}/verifikasi', [VerifikasiController::class, 'show'])->name('pengaduan.verify');
         Route::post('/pengaduan/{pengaduan}/verifikasi', [VerifikasiController::class, 'store'])->name('pengaduan.verifikasi');
         Route::post('/pengaduan/{pengaduan}/status', [VerifikasiController::class, 'status'])->name('pengaduan.status');
     });

@@ -10,8 +10,6 @@ const user = computed(() => usePage().props.auth.user);
 const isPetugas = computed(() => ['petugas', 'admin'].includes(user.value.role));
 const isOwner = computed(() => user.value.id === props.item.user_id);
 
-const verif = useForm({ hasil: 'valid', catatan: '' });
-const statusForm = useForm({ status_baru: 'diproses', catatan: '' });
 const edit = useForm({
     kategori_id: props.item.kategori_id,
     judul: props.item.judul,
@@ -81,35 +79,15 @@ const inputCls = 'block w-full rounded-xl border-gray-200 text-sm shadow-sm focu
                         </div>
                     </article>
 
-                    <!-- Verifikasi (petugas) -->
-                    <div v-if="isPetugas && item.status === 'menunggu_verifikasi'" class="rounded-2xl border border-orange-200 bg-orange-50/60 p-5 shadow-sm sm:p-6">
-                        <h3 class="font-extrabold">Verifikasi Laporan</h3>
-                        <p class="mt-1 text-sm text-gray-600">Keputusanmu tercatat permanen di riwayat beserta namamu.</p>
-                        <form @submit.prevent="verif.post(route('pengaduan.verifikasi', item.id))" class="mt-4 space-y-3">
-                            <div class="grid gap-2 sm:grid-cols-3">
-                                <label v-for="o in [{v:'valid',t:'Valid',d:'Teruskan ke tindak lanjut'},{v:'tidak_valid',t:'Tolak',d:'Tidak memenuhi syarat'},{v:'butuh_info',t:'Minta Info',d:'Perlu dilengkapi pelapor'}]" :key="o.v" :class="['cursor-pointer rounded-xl border-2 p-3 text-center transition', verif.hasil === o.v ? 'border-orange-500 bg-white shadow-sm' : 'border-transparent bg-white/60 hover:border-orange-200']">
-                                    <input v-model="verif.hasil" :value="o.v" type="radio" class="sr-only" />
-                                    <p class="text-sm font-extrabold">{{ o.t }}</p>
-                                    <p class="mt-0.5 text-xs text-gray-500">{{ o.d }}</p>
-                                </label>
-                            </div>
-                            <textarea v-model="verif.catatan" rows="2" placeholder="Catatan / alasan (wajib jika menolak atau meminta info)" :class="inputCls" />
-                            <InputError :message="verif.errors.catatan" />
-                            <button class="rounded-xl bg-orange-600 px-6 py-2.5 text-sm font-bold text-white shadow transition hover:bg-orange-700">Simpan Verifikasi</button>
-                        </form>
-                    </div>
-
-                    <!-- Update status (petugas) -->
-                    <div v-if="isPetugas && ['diverifikasi', 'diproses'].includes(item.status)" class="rounded-2xl border border-gray-200/70 bg-white p-5 shadow-sm sm:p-6">
-                        <h3 class="font-extrabold">Update Tindak Lanjut</h3>
-                        <form @submit.prevent="statusForm.post(route('pengaduan.status', item.id))" class="mt-3 flex flex-col gap-2 sm:flex-row">
-                            <select v-model="statusForm.status_baru" class="rounded-xl border-gray-200 text-sm font-semibold shadow-sm focus:border-orange-400 focus:ring-orange-200">
-                                <option v-if="item.status === 'diverifikasi'" value="diproses">Mulai diproses →</option>
-                                <option v-if="item.status === 'diproses'" value="selesai">Tandai selesai →</option>
-                            </select>
-                            <input v-model="statusForm.catatan" placeholder="Catatan progres (cth: tim meluncur ke lokasi)" class="flex-1 rounded-xl border-gray-200 text-sm shadow-sm focus:border-orange-400 focus:ring-orange-200" />
-                            <button class="rounded-xl bg-gray-900 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-gray-700">Update</button>
-                        </form>
+                    <!-- Aksi petugas → halaman verifikasi khusus (PRD §10) -->
+                    <div v-if="isPetugas && ['menunggu_verifikasi', 'diverifikasi', 'diproses'].includes(item.status)" class="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-orange-200 bg-orange-50/70 p-5 shadow-sm">
+                        <div>
+                            <h3 class="font-extrabold">{{ item.status === 'menunggu_verifikasi' ? 'Laporan ini menunggu keputusanmu' : 'Laporan ini perlu update tindak lanjut' }}</h3>
+                            <p class="mt-0.5 text-sm text-gray-600">Buka halaman verifikasi untuk memeriksa bukti & mengambil tindakan.</p>
+                        </div>
+                        <Link :href="route('pengaduan.verify', item.id)" class="rounded-xl bg-orange-600 px-6 py-2.5 text-sm font-bold text-white shadow transition hover:bg-orange-700">
+                            {{ item.status === 'menunggu_verifikasi' ? 'Verifikasi Sekarang' : 'Update Status' }}
+                        </Link>
                     </div>
 
                     <!-- Edit + resubmit -->
