@@ -1,5 +1,6 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import StatusBadge from '@/Components/StatusBadge.vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { reactive, watch } from 'vue';
 
@@ -9,6 +10,8 @@ const props = defineProps({
     kategoris: Array,
     statuses: Array,
 });
+
+const statusLabel = { menunggu_verifikasi: 'Menunggu Verifikasi', butuh_info_tambahan: 'Butuh Info', diverifikasi: 'Diverifikasi', ditolak: 'Ditolak', diproses: 'Diproses', selesai: 'Selesai' };
 
 const f = reactive({
     status: props.filters?.status ?? '',
@@ -24,81 +27,81 @@ watch(f, () => {
     }, 300);
 });
 
-const badge = (s) =>
-    ({
-        menunggu_verifikasi: 'bg-yellow-100 text-yellow-800',
-        butuh_info_tambahan: 'bg-purple-100 text-purple-800',
-        diverifikasi: 'bg-blue-100 text-blue-800',
-        ditolak: 'bg-red-100 text-red-800',
-        diproses: 'bg-indigo-100 text-indigo-800',
-        selesai: 'bg-green-100 text-green-800',
-    })[s] ?? 'bg-gray-100 text-gray-800';
+const avatarBg = ['bg-orange-100 text-orange-700', 'bg-blue-100 text-blue-700', 'bg-green-100 text-green-700', 'bg-purple-100 text-purple-700', 'bg-rose-100 text-rose-700'];
+const fmt = (d) => new Date(d).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
 </script>
 
 <template>
     <Head title="Pengaduan" />
     <AuthenticatedLayout>
         <template #header>
-            <div class="flex items-center justify-between">
-                <h2 class="text-xl font-semibold text-gray-800">Pengaduan</h2>
-                <Link
-                    :href="route('pengaduan.create')"
-                    class="rounded-md bg-orange-600 px-4 py-2 text-sm font-semibold text-white hover:bg-orange-700"
-                >
-                    Buat Pengaduan
+            <div class="flex flex-wrap items-center justify-between gap-3">
+                <div>
+                    <h2 class="text-2xl font-extrabold tracking-tight text-gray-900">Daftar Pengaduan</h2>
+                    <p class="mt-1 text-sm text-gray-500">{{ items.total }} laporan · klik tiket untuk detail & timeline</p>
+                </div>
+                <Link :href="route('pengaduan.create')" class="inline-flex items-center gap-2 rounded-xl bg-orange-600 px-5 py-2.5 text-sm font-bold text-white shadow-lg shadow-orange-600/25 transition hover:-translate-y-0.5 hover:bg-orange-700">
+                    <span class="text-lg leading-none">+</span> Buat Pengaduan
                 </Link>
             </div>
         </template>
 
         <div class="py-6">
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                <div class="mb-4 flex flex-wrap gap-2 bg-white p-4 shadow-sm sm:rounded-lg">
-                    <input v-model="f.q" placeholder="Cari judul / tiket…" class="rounded-md border-gray-300 text-sm" />
-                    <select v-model="f.status" class="rounded-md border-gray-300 text-sm">
-                        <option value="">Semua status</option>
-                        <option v-for="s in statuses" :key="s" :value="s">{{ s }}</option>
-                    </select>
-                    <select v-model="f.kategori_id" class="rounded-md border-gray-300 text-sm">
-                        <option value="">Semua kategori</option>
-                        <option v-for="k in kategoris" :key="k.id" :value="k.id">{{ k.nama_kategori }}</option>
-                    </select>
+                <div class="mb-4 grid gap-3 rounded-2xl border border-gray-200/70 bg-white p-4 shadow-sm sm:grid-cols-3">
+                    <label class="block">
+                        <span class="mb-1 block text-xs font-bold uppercase tracking-wide text-gray-400">Pencarian</span>
+                        <input v-model="f.q" placeholder="Cari judul / nomor tiket…" class="block w-full rounded-xl border-gray-200 text-sm shadow-sm focus:border-orange-400 focus:ring-orange-200" />
+                    </label>
+                    <label class="block">
+                        <span class="mb-1 block text-xs font-bold uppercase tracking-wide text-gray-400">Status</span>
+                        <select v-model="f.status" class="block w-full rounded-xl border-gray-200 text-sm shadow-sm focus:border-orange-400 focus:ring-orange-200">
+                            <option value="">Semua status</option>
+                            <option v-for="s in statuses" :key="s" :value="s">{{ statusLabel[s] ?? s }}</option>
+                        </select>
+                    </label>
+                    <label class="block">
+                        <span class="mb-1 block text-xs font-bold uppercase tracking-wide text-gray-400">Kategori</span>
+                        <select v-model="f.kategori_id" class="block w-full rounded-xl border-gray-200 text-sm shadow-sm focus:border-orange-400 focus:ring-orange-200">
+                            <option value="">Semua kategori</option>
+                            <option v-for="k in kategoris" :key="k.id" :value="k.id">{{ k.nama_kategori }}</option>
+                        </select>
+                    </label>
                 </div>
 
-                <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
-                    <table class="min-w-full divide-y divide-gray-200 text-sm">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th class="px-4 py-2 text-left">Tiket</th>
-                                <th class="px-4 py-2 text-left">Judul</th>
-                                <th class="px-4 py-2 text-left">Kategori</th>
-                                <th class="px-4 py-2 text-left">Status</th>
-                                <th class="px-4 py-2 text-left">Tanggal</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-100">
-                            <tr v-for="p in items.data" :key="p.id">
-                                <td class="px-4 py-2">
-                                    <Link :href="route('pengaduan.show', p.nomor_tiket)" class="font-mono text-orange-700 hover:underline">
-                                        {{ p.nomor_tiket }}
-                                    </Link>
-                                </td>
-                                <td class="px-4 py-2">{{ p.judul }}</td>
-                                <td class="px-4 py-2">{{ p.kategori?.nama_kategori }}</td>
-                                <td class="px-4 py-2">
-                                    <span :class="['rounded-full px-2 py-0.5 text-xs font-semibold', badge(p.status)]">{{ p.status }}</span>
-                                </td>
-                                <td class="px-4 py-2 text-gray-500">{{ new Date(p.created_at).toLocaleDateString('id-ID') }}</td>
-                            </tr>
-                            <tr v-if="!items.data.length">
-                                <td colspan="5" class="px-4 py-8 text-center text-gray-500">Belum ada pengaduan.</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="overflow-hidden rounded-2xl border border-gray-200/70 bg-white shadow-sm">
+                    <ul class="divide-y divide-gray-100">
+                        <li v-for="p in items.data" :key="p.id">
+                            <Link :href="route('pengaduan.show', p.nomor_tiket)" class="flex items-center gap-4 px-4 py-4 transition hover:bg-orange-50/50 sm:px-6">
+                                <span :class="['hidden size-11 shrink-0 items-center justify-center rounded-xl text-lg font-extrabold sm:flex', avatarBg[p.kategori_id % avatarBg.length]]">{{ (p.kategori?.nama_kategori ?? '?').charAt(0) }}</span>
+                                <span class="min-w-0 flex-1">
+                                    <span class="flex flex-wrap items-center gap-2">
+                                        <span class="truncate font-bold text-gray-900">{{ p.judul }}</span>
+                                        <StatusBadge :status="p.status" />
+                                    </span>
+                                    <span class="mt-1 block truncate text-sm text-gray-500">
+                                        <span class="font-mono text-xs text-orange-700">{{ p.nomor_tiket }}</span>
+                                        · {{ p.kategori?.nama_kategori }} · {{ fmt(p.created_at) }}
+                                    </span>
+                                </span>
+                                <span class="shrink-0 text-xl text-gray-300">›</span>
+                            </Link>
+                        </li>
+                    </ul>
+                    <div v-if="!items.data.length" class="px-6 py-16 text-center">
+                        <p class="mx-auto flex size-14 items-center justify-center rounded-2xl bg-orange-50 text-2xl font-bold text-orange-300">?</p>
+                        <p class="mt-4 font-bold text-gray-800">Belum ada pengaduan</p>
+                        <p class="mt-1 text-sm text-gray-500">Coba ubah filter, atau buat laporan pertama.</p>
+                        <Link :href="route('pengaduan.create')" class="mt-4 inline-block rounded-xl bg-orange-600 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-orange-700">Buat Pengaduan</Link>
+                    </div>
                 </div>
 
-                <div class="mt-4 flex gap-2">
-                    <Link v-if="items.prev_page_url" :href="items.prev_page_url" class="rounded border px-3 py-1 text-sm">← Prev</Link>
-                    <Link v-if="items.next_page_url" :href="items.next_page_url" class="rounded border px-3 py-1 text-sm">Next →</Link>
+                <div class="mt-4 flex items-center justify-between text-sm text-gray-500">
+                    <p>Halaman {{ items.current_page }} dari {{ items.last_page }}</p>
+                    <div class="flex gap-2">
+                        <Link v-if="items.prev_page_url" :href="items.prev_page_url" class="rounded-xl border border-gray-200 bg-white px-4 py-2 font-semibold transition hover:border-orange-300 hover:text-orange-700">← Sebelumnya</Link>
+                        <Link v-if="items.next_page_url" :href="items.next_page_url" class="rounded-xl border border-gray-200 bg-white px-4 py-2 font-semibold transition hover:border-orange-300 hover:text-orange-700">Berikutnya →</Link>
+                    </div>
                 </div>
             </div>
         </div>

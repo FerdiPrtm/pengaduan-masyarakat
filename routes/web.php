@@ -4,7 +4,8 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\PengaduanController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VerifikasiController;
-use Illuminate\Foundation\Application;
+use App\Models\KategoriPengaduan;
+use App\Models\Pengaduan;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -12,8 +13,12 @@ Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
+        'stats' => [
+            'total' => Pengaduan::count(),
+            'selesai' => Pengaduan::where('status', 'selesai')->count(),
+            'ditindaklanjuti' => Pengaduan::whereIn('status', ['diverifikasi', 'diproses'])->count(),
+            'kategori' => KategoriPengaduan::withCount('pengaduan')->orderByDesc('pengaduan_count')->get(),
+        ],
     ]);
 });
 
