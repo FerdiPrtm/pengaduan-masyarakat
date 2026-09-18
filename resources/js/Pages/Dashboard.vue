@@ -31,7 +31,6 @@ const statCards = computed(() =>
         ],
 );
 
-const avatarBg = ['bg-orange-100 text-orange-700', 'bg-blue-100 text-blue-700', 'bg-green-100 text-green-700', 'bg-purple-100 text-purple-700'];
 </script>
 
 <template>
@@ -39,18 +38,17 @@ const avatarBg = ['bg-orange-100 text-orange-700', 'bg-blue-100 text-blue-700', 
 
     <AuthenticatedLayout>
         <!-- HERO -->
-        <div class="relative overflow-hidden bg-gradient-to-r from-orange-700 via-orange-600 to-amber-500">
-            <div class="pointer-events-none absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_85%_20%,white,transparent_45%),radial-gradient(circle_at_10%_90%,white,transparent_40%)]"></div>
+        <div class="relative bg-orange-700">
             <div class="relative mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-4 py-8 sm:px-6 lg:px-8">
                 <div class="text-white">
                     <p class="text-sm font-semibold text-orange-100">{{ role === 'petugas' ? 'Dasbor Petugas' : 'Dasbor Pelapor' }} · {{ new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long' }) }}</p>
                     <h2 class="mt-1 text-2xl font-extrabold tracking-tight sm:text-3xl">Halo, {{ firstName }}!</h2>
                     <p class="mt-1 text-orange-50">{{ role === 'petugas' ? 'Ada laporan yang menunggu keputusanmu.' : 'Pantau semua laporanmu dari satu tempat.' }}</p>
                 </div>
-                <Link v-if="role === 'pelapor'" :href="route('pengaduan.create')" class="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3 text-sm font-bold text-orange-700 shadow-lg transition hover:-translate-y-0.5 hover:bg-orange-50">
+                <Link v-if="role === 'pelapor'" :href="route('pengaduan.create')" class="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3 text-sm font-bold text-orange-700 shadow-sm transition hover:bg-orange-50">
                     <span class="text-lg leading-none">+</span> Buat Pengaduan
                 </Link>
-                <Link v-else :href="route('pengaduan.index')" class="rounded-xl bg-gray-900 px-6 py-3 text-sm font-bold text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-gray-800">Lihat Semua Laporan</Link>
+                <Link v-else :href="route('pengaduan.index')" class="rounded-xl bg-gray-900 px-6 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-gray-800">Lihat Semua Laporan</Link>
             </div>
         </div>
 
@@ -58,7 +56,7 @@ const avatarBg = ['bg-orange-100 text-orange-700', 'bg-blue-100 text-blue-700', 
             <div class="mx-auto max-w-7xl space-y-5 sm:px-6 lg:px-8">
                 <!-- STAT CARDS -->
                 <div class="grid grid-cols-2 gap-4" :class="role === 'petugas' ? 'lg:grid-cols-3' : 'lg:grid-cols-4'">
-                    <div v-for="c in statCards" :key="c.t" class="rounded-2xl border border-gray-200/70 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+                    <div v-for="c in statCards" :key="c.t" class="rounded-2xl border border-gray-200/70 bg-white p-5 shadow-sm transition hover:border-orange-200 hover:shadow-md">
                         <span :class="['flex size-10 items-center justify-center rounded-xl', c.chip]">
                             <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path :d="c.icon.split('|')[0]" /><path v-if="c.icon.split('|')[1]" :d="c.icon.split('|')[1]" /></svg>
                         </span>

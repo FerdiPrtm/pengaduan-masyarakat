@@ -26,7 +26,6 @@ watch(f, () => {
     }, 300);
 });
 
-const avatarBg = ['bg-orange-100 text-orange-700', 'bg-blue-100 text-blue-700', 'bg-green-100 text-green-700', 'bg-purple-100 text-purple-700', 'bg-rose-100 text-rose-700'];
 const fmt = (d) => new Date(d).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
 </script>
 
@@ -39,7 +38,7 @@ const fmt = (d) => new Date(d).toLocaleDateString('id-ID', { day: 'numeric', mon
                     <h2 class="text-2xl font-extrabold tracking-tight text-gray-900">Daftar Pengaduan</h2>
                     <p class="mt-1 text-sm text-gray-500">{{ items.total }} laporan · klik tiket untuk detail & timeline</p>
                 </div>
-                <Link :href="route('pengaduan.create')" class="inline-flex items-center gap-2 rounded-xl bg-orange-600 px-5 py-2.5 text-sm font-bold text-white shadow-lg shadow-orange-600/25 transition hover:-translate-y-0.5 hover:bg-orange-700">
+                <Link :href="route('pengaduan.create')" class="inline-flex items-center gap-2 rounded-xl bg-orange-600 px-5 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-orange-700">
                     <span class="text-lg leading-none">+</span> Buat Pengaduan
                 </Link>
             </div>
@@ -72,7 +71,7 @@ const fmt = (d) => new Date(d).toLocaleDateString('id-ID', { day: 'numeric', mon
                     <ul class="divide-y divide-gray-100">
                         <li v-for="p in items.data" :key="p.id">
                             <Link :href="route('pengaduan.show', p.nomor_tiket)" class="flex items-center gap-4 px-4 py-4 transition hover:bg-orange-50/50 sm:px-6">
-                                <span :class="['hidden size-11 shrink-0 items-center justify-center rounded-xl text-lg font-extrabold sm:flex', avatarBg[p.kategori_id % avatarBg.length]]">{{ (p.kategori?.nama_kategori ?? '?').charAt(0) }}</span>
+                                <span class="hidden size-11 shrink-0 items-center justify-center rounded-xl bg-orange-100 text-lg font-extrabold text-orange-600 sm:flex">{{ (p.kategori?.nama_kategori ?? '?').charAt(0) }}</span>
                                 <span class="min-w-0 flex-1">
                                     <span class="flex flex-wrap items-center gap-2">
                                         <span class="truncate font-bold text-gray-900">{{ p.judul }}</span>

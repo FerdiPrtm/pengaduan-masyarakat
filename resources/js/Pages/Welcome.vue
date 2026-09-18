@@ -24,7 +24,7 @@ const faqs = [
     { q: 'Bagaimana jika laporan saya ditolak?', a: 'Penolakan selalu disertai alasan dari petugas. Kamu bisa membuat laporan baru yang lebih lengkap sesuai catatan tersebut.' },
 ];
 
-const avatarBg = ['bg-orange-100 text-orange-700', 'bg-blue-100 text-blue-700', 'bg-green-100 text-green-700', 'bg-purple-100 text-purple-700', 'bg-rose-100 text-rose-700'];
+
 </script>
 
 <template>
@@ -71,7 +71,6 @@ const avatarBg = ['bg-orange-100 text-orange-700', 'bg-blue-100 text-blue-700', 
 
         <!-- HERO -->
         <section class="relative overflow-hidden">
-            <div class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(60rem_30rem_at_80%_-10%,#ffedd5,transparent)]"></div>
             <div class="mx-auto grid max-w-7xl items-center gap-12 px-4 pb-16 pt-12 sm:px-6 md:pt-20 lg:grid-cols-2 lg:px-8">
                 <div>
                     <p class="inline-flex items-center gap-2 rounded-full bg-orange-50 px-3 py-1 text-xs font-semibold text-orange-700 ring-1 ring-inset ring-orange-200">
@@ -85,7 +84,7 @@ const avatarBg = ['bg-orange-100 text-orange-700', 'bg-blue-100 text-blue-700', 
                         Jalan rusak, lampu mati, sampah menumpuk, pelayanan lambat — sampaikan dalam hitungan menit, lampirkan foto, dan pantau penanganannya sampai selesai.
                     </p>
                     <div class="mt-8 flex flex-wrap gap-3">
-                        <Link v-if="canRegister" :href="route('register')" class="rounded-xl bg-orange-600 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-orange-600/25 transition hover:-translate-y-0.5 hover:bg-orange-700">Buat Laporan Sekarang</Link>
+                        <Link v-if="canRegister" :href="route('register')" class="rounded-xl bg-orange-600 px-6 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-orange-700">Buat Laporan Sekarang</Link>
                         <a href="#cara" class="rounded-xl bg-white px-6 py-3 text-sm font-bold text-gray-800 ring-1 ring-inset ring-gray-200 transition hover:ring-orange-300">Lihat Cara Kerja</a>
                     </div>
                     <dl class="mt-10 grid max-w-md grid-cols-3 gap-6 border-t border-gray-100 pt-6">
@@ -116,9 +115,7 @@ const avatarBg = ['bg-orange-100 text-orange-700', 'bg-blue-100 text-blue-700', 
                         </div>
                         <div class="mt-2 rounded-xl bg-orange-50 p-3 text-center text-xs font-semibold text-orange-700 ring-1 ring-inset ring-orange-100">Setiap progres tercatat & bisa dipantau</div>
                     </div>
-                    <div class="absolute -right-4 -top-4 -z-10 size-40 rounded-full bg-orange-100 blur-2xl"></div>
-                    <div class="absolute -bottom-6 -left-6 -z-10 size-40 rounded-full bg-amber-100 blur-2xl"></div>
-                </div>
+                    </div>
             </div>
         </section>
 
@@ -128,8 +125,8 @@ const avatarBg = ['bg-orange-100 text-orange-700', 'bg-blue-100 text-blue-700', 
                 <h2 class="text-2xl font-extrabold tracking-tight sm:text-3xl">Mau lapor apa hari ini?</h2>
                 <p class="mt-2 text-gray-600">Pilih kategori yang paling sesuai — laporanmu otomatis diteruskan ke unit terkait.</p>
                 <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-                    <div v-for="(k, i) in stats.kategori" :key="k.id" class="group rounded-2xl border border-gray-100 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-md">
-                        <span :class="['flex size-11 items-center justify-center rounded-xl text-lg font-extrabold', avatarBg[i % avatarBg.length]]">{{ k.nama_kategori.charAt(0) }}</span>
+                    <div v-for="k in stats.kategori" :key="k.id" class="group rounded-2xl border border-gray-100 bg-white p-5 shadow-sm transition hover:border-orange-200 hover:shadow-md">
+                        <span class="flex size-11 items-center justify-center rounded-xl bg-orange-100 text-lg font-extrabold text-orange-600">{{ k.nama_kategori.charAt(0) }}</span>
                         <p class="mt-3 font-bold">{{ k.nama_kategori }}</p>
                         <p class="mt-0.5 text-xs text-gray-500">{{ k.unit_penanggung_jawab ?? 'Semua unit' }} · {{ k.pengaduan_count }} laporan</p>
                     </div>
@@ -143,8 +140,8 @@ const avatarBg = ['bg-orange-100 text-orange-700', 'bg-blue-100 text-blue-700', 
             <p class="mt-2 max-w-2xl text-gray-600">Empat langkah sederhana. Kamu tidak perlu datang ke kantor mana pun.</p>
             <ol class="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
                 <li v-for="s in steps" :key="s.n" class="relative rounded-2xl bg-white">
-                    <p class="text-5xl font-extrabold text-orange-100">{{ s.n }}</p>
-                    <p class="-mt-6 font-bold">{{ s.t }}</p>
+                    <span class="flex size-9 items-center justify-center rounded-full bg-orange-600 text-sm font-extrabold text-white">{{ s.n }}</span>
+                    <p class="mt-3 font-bold">{{ s.t }}</p>
                     <p class="mt-2 text-sm leading-relaxed text-gray-600">{{ s.d }}</p>
                 </li>
             </ol>
@@ -181,7 +178,7 @@ const avatarBg = ['bg-orange-100 text-orange-700', 'bg-blue-100 text-blue-700', 
                     <p class="text-2xl font-extrabold text-white sm:text-3xl">Suara warga, perubahan nyata.</p>
                     <p class="mt-1 text-orange-100">Daftar gratis dalam 1 menit, laporan pertamamu 5 menit kemudian.</p>
                 </div>
-                <Link v-if="canRegister" :href="route('register')" class="shrink-0 rounded-xl bg-white px-7 py-3.5 text-sm font-bold text-orange-700 shadow-lg transition hover:-translate-y-0.5 hover:bg-orange-50">Daftar & Lapor Sekarang</Link>
+                <Link v-if="canRegister" :href="route('register')" class="shrink-0 rounded-xl bg-white px-7 py-3.5 text-sm font-bold text-orange-700 shadow-sm transition hover:bg-orange-50">Daftar & Lapor Sekarang</Link>
             </div>
         </section>
         <footer class="border-t border-gray-100">

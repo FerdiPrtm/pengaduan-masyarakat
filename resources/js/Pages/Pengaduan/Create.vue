@@ -108,7 +108,7 @@ const inputCls = 'mt-1 block w-full rounded-xl border-gray-200 text-sm shadow-sm
                         </div>
                     </div>
                     <div class="flex items-center gap-3 border-t border-gray-100 pt-5">
-                        <button :disabled="form.processing" class="rounded-xl bg-orange-600 px-7 py-3 text-sm font-bold text-white shadow-lg shadow-orange-600/25 transition hover:-translate-y-0.5 hover:bg-orange-700 disabled:translate-none disabled:opacity-50">
+                        <button :disabled="form.processing" class="rounded-xl bg-orange-600 px-7 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-orange-700 disabled:opacity-50">
                             {{ form.processing ? 'Mengirim…' : 'Kirim Pengaduan' }}
                         </button>
                         <Link :href="route('pengaduan.index')" class="text-sm font-semibold text-gray-500 hover:text-gray-800">Batal</Link>

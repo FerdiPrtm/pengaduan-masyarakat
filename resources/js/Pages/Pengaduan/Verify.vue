@@ -80,7 +80,7 @@ const fmt = (d) => new Date(d).toLocaleString('id-ID', { day: 'numeric', month: 
                                     <textarea v-model="verif.catatan" rows="3" placeholder="Tulis alasan yang jelas — akan dibaca pelapor." :class="inputCls + ' mt-1'" />
                                     <InputError :message="verif.errors.catatan" />
                                 </div>
-                                <button :disabled="verif.processing" class="w-full rounded-xl bg-orange-600 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-orange-600/25 transition hover:bg-orange-700 disabled:opacity-50">{{ verif.processing ? 'Menyimpan…' : 'Simpan Keputusan' }}</button>
+                                <button :disabled="verif.processing" class="w-full rounded-xl bg-orange-600 px-6 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-orange-700 disabled:opacity-50">{{ verif.processing ? 'Menyimpan…' : 'Simpan Keputusan' }}</button>
                             </form>
                         </template>
 
