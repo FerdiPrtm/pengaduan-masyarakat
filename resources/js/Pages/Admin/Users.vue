@@ -1,13 +1,13 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, Link, useForm } from '@inertiajs/vue3';
+import { Head, Link, router } from '@inertiajs/vue3';
 
 defineProps({ items: Object });
 
 const roleBadge = { pelapor: 'bg-gray-100 text-gray-700', petugas: 'bg-blue-100 text-blue-800', admin: 'bg-orange-100 text-orange-800' };
 
 const setRole = (id, role) => {
-    useForm({ role }).patch(route('admin.users.role', id));
+    router.patch(route('admin.users.role', id), { role }, { preserveScroll: true, preserveState: true });
 };
 </script>
 
@@ -38,8 +38,8 @@ const setRole = (id, role) => {
                     </ul>
                 </div>
                 <div class="mt-4 flex gap-2">
-                    <Link v-if="items.prev_page_url" :href="items.prev_page_url" class="rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-semibold transition hover:border-orange-300">← Sebelumnya</Link>
-                    <Link v-if="items.next_page_url" :href="items.next_page_url" class="rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-semibold transition hover:border-orange-300">Berikutnya →</Link>
+                    <Link v-if="items.prev_page_url" :href="items.prev_page_url" preserve-scroll class="rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-semibold transition hover:border-orange-300">← Sebelumnya</Link>
+                    <Link v-if="items.next_page_url" :href="items.next_page_url" preserve-scroll class="rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-semibold transition hover:border-orange-300">Berikutnya →</Link>
                 </div>
             </div>
         </div>

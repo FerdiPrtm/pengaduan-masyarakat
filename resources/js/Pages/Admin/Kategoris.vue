@@ -5,7 +5,7 @@ import { Head, router, useForm } from '@inertiajs/vue3';
 defineProps({ items: Array });
 
 const form = useForm({ nama_kategori: '', unit_penanggung_jawab: '' });
-const submit = () => form.post(route('admin.kategoris.store'), { onSuccess: () => form.reset() });
+const submit = () => form.post(route('admin.kategoris.store'), { preserveScroll: true, preserveState: true, onSuccess: () => form.reset() });
 const inputCls = 'block w-full rounded-xl border-gray-200 text-sm shadow-sm focus:border-orange-400 focus:ring-orange-200';
 </script>
 
@@ -41,7 +41,7 @@ const inputCls = 'block w-full rounded-xl border-gray-200 text-sm shadow-sm focu
                                 <span class="block truncate font-bold text-gray-900">{{ k.nama_kategori }}</span>
                                 <span class="block text-sm text-gray-500">{{ k.unit_penanggung_jawab ?? 'Tanpa unit khusus' }} · {{ k.pengaduan_count }} laporan</span>
                             </span>
-                            <button @click="router.delete(route('admin.kategoris.destroy', k.id))" class="rounded-lg px-3 py-1.5 text-sm font-bold text-red-600 transition hover:bg-red-50">Hapus</button>
+                            <button @click="router.delete(route('admin.kategoris.destroy', k.id), { preserveScroll: true, preserveState: true })" class="rounded-lg px-3 py-1.5 text-sm font-bold text-red-600 transition hover:bg-red-50">Hapus</button>
                         </li>
                     </ul>
                 </div>

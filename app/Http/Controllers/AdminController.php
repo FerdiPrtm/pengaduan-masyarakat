@@ -46,7 +46,7 @@ class AdminController extends Controller
     public function users()
     {
         return Inertia::render('Admin/Users', [
-            'items' => User::orderBy('role')->orderBy('name')->paginate(15),
+            'items' => User::orderBy('name')->paginate(15),
         ]);
     }
 

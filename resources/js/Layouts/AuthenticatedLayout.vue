@@ -1,15 +1,29 @@
 <script setup>
-import { ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import { Link, usePage } from '@inertiajs/vue3';
-import { computed } from 'vue';
 
 const showingNavigationDropdown = ref(false);
 const user = computed(() => usePage().props.auth.user);
 const roleLabel = { pelapor: 'Pelapor', petugas: 'Petugas', admin: 'Admin' };
+
+const flash = computed(() => usePage().props.flash || {});
+const showFlash = ref(false);
+let flashTimer;
+
+watch(() => flash.value.success, (msg) => {
+    clearTimeout(flashTimer);
+    showFlash.value = false;
+    if (msg) {
+        requestAnimationFrame(() => {
+            showFlash.value = true;
+            flashTimer = setTimeout(() => (showFlash.value = false), 4000);
+        });
+    }
+});
 </script>
 
 <template>
@@ -99,7 +113,25 @@ const roleLabel = { pelapor: 'Pelapor', petugas: 'Petugas', admin: 'Admin' };
             </header>
 
             <main>
-                <slot />
+                <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                    <Transition
+                        enter-active-class="transform ease-out duration-300"
+                        enter-from-class="translate-y-[-8px] opacity-0"
+                        enter-to-class="translate-y-0 opacity-100"
+                        leave-active-class="transform ease-in duration-200"
+                        leave-from-class="translate-y-0 opacity-100"
+                        leave-to-class="translate-y-[-8px] opacity-0"
+                    >
+                        <div v-if="showFlash && flash.success" class="mt-4 flex items-start gap-3 rounded-xl border border-green-200 bg-green-50 px-4 py-3 shadow-sm">
+                            <svg class="mt-0.5 size-5 shrink-0 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
+                            <p class="flex-1 text-sm font-semibold text-green-800">{{ flash.success }}</p>
+                            <button @click="showFlash = false" class="rounded p-0.5 text-green-500 transition hover:bg-green-100 hover:text-green-700" aria-label="Tutup notifikasi">
+                                <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" /></svg>
+                            </button>
+                        </div>
+                    </Transition>
+                    <slot />
+                </div>
             </main>
         </div>
     </div>

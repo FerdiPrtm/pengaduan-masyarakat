@@ -67,7 +67,7 @@ const fmt = (d) => new Date(d).toLocaleString('id-ID', { day: 'numeric', month: 
                         <template v-if="item.status === 'menunggu_verifikasi'">
                             <h3 class="text-lg font-extrabold">Keputusan Verifikasi</h3>
                             <p class="mt-1 text-sm text-gray-500">Tercatat permanen beserta namamu.</p>
-                            <form @submit.prevent="verif.post(route('pengaduan.verifikasi', item.id))" class="mt-4 space-y-3">
+                            <form @submit.prevent="verif.post(route('pengaduan.verifikasi', item.id), { preserveScroll: true })" class="mt-4 space-y-3">
                                 <label v-for="o in decisions" :key="o.v" class="block cursor-pointer">
                                     <input v-model="verif.hasil" :value="o.v" type="radio" class="peer sr-only" />
                                     <span :class="['flex gap-3 rounded-xl border-2 border-gray-100 bg-white p-4 transition hover:border-orange-200', o.ring]">
@@ -87,7 +87,7 @@ const fmt = (d) => new Date(d).toLocaleString('id-ID', { day: 'numeric', month: 
                         <template v-else-if="['diverifikasi', 'diproses'].includes(item.status)">
                             <h3 class="text-lg font-extrabold">Update Tindak Lanjut</h3>
                             <p class="mt-1 text-sm text-gray-500">Catat progres penanganan untuk dilihat pelapor.</p>
-                            <form @submit.prevent="statusForm.post(route('pengaduan.status', item.id))" class="mt-4 space-y-3">
+                            <form @submit.prevent="statusForm.post(route('pengaduan.status', item.id), { preserveScroll: true })" class="mt-4 space-y-3">
                                 <div>
                                     <label class="text-sm font-bold text-gray-700">Status baru</label>
                                     <select v-model="statusForm.status_baru" :class="inputCls + ' mt-1 font-semibold'">
