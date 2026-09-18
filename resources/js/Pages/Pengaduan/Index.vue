@@ -1,6 +1,7 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import StatusBadge from '@/Components/StatusBadge.vue';
+import KategoriIcon from '@/Components/KategoriIcon.vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { reactive, watch } from 'vue';
 import { STATUS_LABEL as statusLabel } from '@/lib/status.js';
@@ -71,7 +72,7 @@ const fmt = (d) => new Date(d).toLocaleDateString('id-ID', { day: 'numeric', mon
                     <ul class="divide-y divide-gray-100">
                         <li v-for="p in items.data" :key="p.id">
                             <Link :href="route('pengaduan.show', p.nomor_tiket)" class="flex items-center gap-4 px-4 py-4 transition hover:bg-orange-50/50 sm:px-6">
-                                <span class="hidden size-11 shrink-0 items-center justify-center rounded-xl bg-orange-100 text-lg font-extrabold text-orange-600 sm:flex">{{ (p.kategori?.nama_kategori ?? '?').charAt(0) }}</span>
+                                <span class="hidden size-11 shrink-0 items-center justify-center rounded-xl bg-orange-100 text-orange-600 sm:flex"><KategoriIcon :nama="p.kategori?.nama_kategori" /></span>
                                 <span class="min-w-0 flex-1">
                                     <span class="flex flex-wrap items-center gap-2">
                                         <span class="truncate font-bold text-gray-900">{{ p.judul }}</span>

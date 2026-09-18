@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import { Head, Link } from '@inertiajs/vue3';
 import { label as statusLabel } from '@/lib/status.js';
+import KategoriIcon from '@/Components/KategoriIcon.vue';
 
 const menuOpen = ref(false);
 
@@ -127,7 +128,7 @@ const faqs = [
                 <p class="mt-2 text-gray-600">Pilih kategori yang paling sesuai — laporanmu otomatis diteruskan ke unit terkait.</p>
                 <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
                     <div v-for="k in stats.kategori" :key="k.id" class="group rounded-2xl border border-gray-100 bg-white p-5 shadow-sm transition hover:border-orange-200 hover:shadow-md">
-                        <span class="flex size-11 items-center justify-center rounded-xl bg-orange-100 text-lg font-extrabold text-orange-600">{{ k.nama_kategori.charAt(0) }}</span>
+                        <span class="flex size-11 items-center justify-center rounded-xl bg-orange-100 text-orange-600"><KategoriIcon :nama="k.nama_kategori" /></span>
                         <p class="mt-3 font-bold">{{ k.nama_kategori }}</p>
                         <p class="mt-0.5 text-xs text-gray-500">{{ k.unit_penanggung_jawab ?? 'Semua unit' }} · {{ k.pengaduan_count }} laporan</p>
                     </div>

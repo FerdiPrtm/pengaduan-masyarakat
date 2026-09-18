@@ -1,5 +1,6 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import KategoriIcon from '@/Components/KategoriIcon.vue';
 import { Head, router, useForm } from '@inertiajs/vue3';
 
 defineProps({ items: Array });
@@ -36,7 +37,7 @@ const inputCls = 'block w-full rounded-xl border-gray-200 text-sm shadow-sm focu
                 <div class="overflow-hidden rounded-2xl border border-gray-200/70 bg-white shadow-sm lg:col-span-3">
                     <ul class="divide-y divide-gray-100">
                         <li v-for="k in items" :key="k.id" class="flex items-center gap-3 px-4 py-3.5 sm:px-6">
-                            <span class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-orange-100 text-base font-extrabold text-orange-700">{{ k.nama_kategori.charAt(0) }}</span>
+                            <span class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-orange-100 text-orange-700"><KategoriIcon :nama="k.nama_kategori" /></span>
                             <span class="min-w-0 flex-1">
                                 <span class="block truncate font-bold text-gray-900">{{ k.nama_kategori }}</span>
                                 <span class="block text-sm text-gray-500">{{ k.unit_penanggung_jawab ?? 'Tanpa unit khusus' }} · {{ k.pengaduan_count }} laporan</span>

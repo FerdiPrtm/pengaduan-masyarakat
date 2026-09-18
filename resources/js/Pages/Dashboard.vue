@@ -2,6 +2,7 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import StatCard from '@/Components/StatCard.vue';
 import StatusBadge from '@/Components/StatusBadge.vue';
+import KategoriIcon from '@/Components/KategoriIcon.vue';
 import { Head, Link, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
 
@@ -126,7 +127,7 @@ const tahap = computed(() => [
                             <ul class="divide-y divide-gray-100">
                                 <li v-for="p in recent" :key="p.id">
                                     <Link :href="route('pengaduan.show', p.nomor_tiket)" class="flex items-center gap-3 px-5 py-3.5 transition hover:bg-orange-50/50">
-                                        <span class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-orange-100 text-sm font-extrabold text-orange-700">{{ (p.kategori?.nama_kategori ?? '?').charAt(0) }}</span>
+                                        <span class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-orange-100 text-orange-700"><KategoriIcon :nama="p.kategori?.nama_kategori" /></span>
                                         <span class="min-w-0 flex-1">
                                             <span class="block truncate font-bold text-gray-900">{{ p.judul }}</span>
                                             <span class="mt-0.5 block truncate text-sm text-gray-500"><span class="font-mono text-xs text-orange-700">{{ p.nomor_tiket }}</span> · {{ p.kategori?.nama_kategori }} · {{ fmt(p.created_at) }}</span>
