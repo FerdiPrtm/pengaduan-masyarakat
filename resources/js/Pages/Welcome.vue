@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import { Head, Link } from '@inertiajs/vue3';
+import { label as statusLabel } from '@/lib/status.js';
 
 const menuOpen = ref(false);
 
@@ -105,12 +106,12 @@ const faqs = [
                         <p class="mt-3 font-bold">Jalan berlubang di Jl. Merdeka</p>
                         <p class="mt-1 text-sm text-gray-500">Infrastruktur · Jl. Merdeka No. 10</p>
                         <div class="mt-4 space-y-0">
-                            <div v-for="(s, i) in ['Diajukan', 'Diverifikasi', 'Diproses', 'Selesai']" :key="s" class="flex gap-3">
+                            <div v-for="(s, i) in ['menunggu_verifikasi', 'diverifikasi', 'diproses', 'selesai']" :key="s" class="flex gap-3">
                                 <div class="flex flex-col items-center">
                                     <span class="flex size-5 items-center justify-center rounded-full bg-green-500 text-[10px] font-bold text-white">✓</span>
                                     <span v-if="i < 3" class="w-0.5 flex-1 bg-green-200"></span>
                                 </div>
-                                <p class="pb-4 text-sm font-medium text-gray-700">{{ s }}</p>
+                                <p class="pb-4 text-sm font-medium text-gray-700">{{ statusLabel(s) }}</p>
                             </div>
                         </div>
                         <div class="mt-2 rounded-xl bg-orange-50 p-3 text-center text-xs font-semibold text-orange-700 ring-1 ring-inset ring-orange-100">Setiap progres tercatat & bisa dipantau</div>

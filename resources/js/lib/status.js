@@ -11,4 +11,6 @@ export const STATUS_LABEL = {
 
 export const STATUS_FLOW = ['menunggu_verifikasi', 'diverifikasi', 'diproses', 'selesai'];
 
+export const STATUS_ORDER = ['menunggu_verifikasi', 'butuh_info_tambahan', 'diverifikasi', 'ditolak', 'diproses', 'selesai'];
+
 export const label = (s) => STATUS_LABEL[s] ?? s;
