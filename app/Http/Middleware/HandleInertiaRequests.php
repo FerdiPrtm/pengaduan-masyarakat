@@ -36,7 +36,16 @@ class HandleInertiaRequests extends Middleware
             ],
             'flash' => [
                 'success' => fn () => $request->session()->get('success'),
+                'error' => fn () => $request->session()->get('error'),
             ],
+            'notifikasi' => fn () => $request->user() ? [
+                'count' => $request->user()->notifikasi()->whereNull('dibaca_at')->count(),
+                'items' => $request->user()->notifikasi()
+                    ->with('pengaduan:id,nomor_tiket')
+                    ->latest()
+                    ->take(5)
+                    ->get(),
+            ] : null,
         ];
     }
 }

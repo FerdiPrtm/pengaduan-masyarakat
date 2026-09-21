@@ -26,9 +26,10 @@ onMounted(() => document.addEventListener('keydown', closeOnEscape));
 onUnmounted(() => document.removeEventListener('keydown', closeOnEscape));
 
 const widthClass = computed(() => {
-    return {
-        48: 'w-48',
-    }[props.width.toString()];
+return {
+            48: 'w-48',
+            72: 'w-72',
+        }[props.width.toString()];
 });
 
 const alignmentClasses = computed(() => {
