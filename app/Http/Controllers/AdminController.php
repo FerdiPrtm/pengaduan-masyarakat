@@ -53,6 +53,18 @@ class AdminController extends Controller
     public function updateUserRole(Request $request, User $user)
     {
         $data = $request->validate(['role' => ['required', 'in:pelapor,petugas,admin']]);
+
+        if ($user->role !== $data['role']) {
+            // ponytail: guard admin count; per-role multi-admin instances beyond admin+petugas2 need distinct rule
+            if ($user->isAdmin() && User::where('role', 'admin')->count() <= 1) {
+                return back()->withErrors(['role' => 'Minimal satu admin harus tetap aktif.'])->with('error', 'Gagal mengubah role.');
+            }
+
+            if ($user->id === $request->user()->id) {
+                return back()->withErrors(['role' => 'Tidak bisa mengubah role akun sendiri.'])->with('error', 'Gagal mengubah role.');
+            }
+        }
+
         $user->update($data);
 
         return back()->with('success', 'Role diperbarui.');
