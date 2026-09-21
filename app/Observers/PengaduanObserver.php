@@ -23,7 +23,7 @@ class PengaduanObserver
     public function deleting(Pengaduan $pengaduan): void
     {
         if ($pengaduan->nomor_tiket) {
-            Storage::disk('public')->deleteDirectory('pengaduan/'.$pengaduan->nomor_tiket);
+            Storage::disk('local')->deleteDirectory('pengaduan/'.$pengaduan->nomor_tiket);
         }
     }
 }

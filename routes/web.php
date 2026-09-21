@@ -68,6 +68,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->middleware('throttle:5,60')->name('pengaduan.store');
     Route::get('/pengaduan/{tiket}', [PengaduanController::class, 'show'])->name('pengaduan.show');
     Route::put('/pengaduan/{pengaduan}', [PengaduanController::class, 'update'])->name('pengaduan.update');
+    Route::get('/pengaduan/{pengaduan}/foto/{foto}', [PengaduanController::class, 'foto'])->name('pengaduan.foto');
+    Route::delete('/pengaduan/{pengaduan}/foto/{foto}', [PengaduanController::class, 'destroyFoto'])->name('pengaduan.foto.destroy');
 
     // Petugas: verifikasi + update status
     Route::middleware('role:petugas,admin')->group(function () {
