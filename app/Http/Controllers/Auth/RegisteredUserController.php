@@ -35,6 +35,17 @@ class RegisteredUserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'nik' => 'nullable|string|digits:16|unique:users,nik',
+            'no_hp' => 'nullable|string|max:20',
+        ], [
+            'name.required' => 'Nama wajib diisi.',
+            'email.required' => 'Email wajib diisi.',
+            'email.email' => 'Format email tidak valid.',
+            'email.unique' => 'Email sudah terdaftar.',
+            'password.required' => 'Kata sandi wajib diisi.',
+            'password.confirmed' => 'Konfirmasi kata sandi tidak cocok.',
+            'nik.digits' => 'NIK harus 16 digit.',
+            'nik.unique' => 'NIK sudah terdaftar.',
         ]);
 
         $user = User::create([
@@ -42,6 +53,8 @@ class RegisteredUserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role' => 'pelapor', // registrasi publik hanya pelapor
+            'nik' => $request->nik,
+            'no_hp' => $request->no_hp,
         ]);
 
         event(new Registered($user));

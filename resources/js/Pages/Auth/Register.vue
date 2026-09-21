@@ -11,6 +11,8 @@ const form = useForm({
     email: '',
     password: '',
     password_confirmation: '',
+    nik: '',
+    no_hp: '',
 });
 
 const submit = () => {
@@ -54,6 +56,38 @@ const submit = () => {
                 />
 
                 <InputError class="mt-2" :message="form.errors.email" />
+            </div>
+
+            <div class="mt-4">
+                <InputLabel for="nik" value="NIK (16 digit)" />
+
+                <TextInput
+                    id="nik"
+                    type="text"
+                    inputmode="numeric"
+                    maxlength="16"
+                    class="mt-1 block w-full"
+                    v-model="form.nik"
+                    autocomplete="off"
+                    placeholder="Opsional, isi 16 digit"
+                />
+
+                <InputError class="mt-2" :message="form.errors.nik" />
+            </div>
+
+            <div class="mt-4">
+                <InputLabel for="no_hp" value="Nomor HP" />
+
+                <TextInput
+                    id="no_hp"
+                    type="tel"
+                    class="mt-1 block w-full"
+                    v-model="form.no_hp"
+                    autocomplete="tel"
+                    placeholder="Opsional"
+                />
+
+                <InputError class="mt-2" :message="form.errors.no_hp" />
             </div>
 
             <div class="mt-4">
