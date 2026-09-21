@@ -51,6 +51,10 @@ class ProfileController extends Controller
 
         $user = $request->user();
 
+        if ($user->pengaduan()->exists()) {
+            return back()->withErrors(['password' => 'Akun yang memiliki laporan tidak bisa dihapus.'])->with('error', 'Hapus akun dibatalkan: hapus laporan Anda terlebih dahulu.');
+        }
+
         Auth::logout();
 
         $user->delete();
