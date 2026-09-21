@@ -1,11 +1,17 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import InputError from '@/Components/InputError.vue';
+import Lightbox from '@/Components/Lightbox.vue';
 import StatusBadge from '@/Components/StatusBadge.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
+import { computed, ref } from 'vue';
 import { STATUS_LABEL as statusLabel } from '@/lib/status.js';
 
 const props = defineProps({ item: Object });
+
+const fotoUrl = (ft) => route('pengaduan.foto', [props.item.id, ft.id]);
+const fotoImages = computed(() => props.item.foto?.map((f) => ({ url: fotoUrl(f), original_name: f.original_name })) ?? []);
+const openFoto = ref(null);
 
 const verif = useForm({ hasil: 'valid', catatan: '' });
 const statusForm = useForm({ status_baru: props.item.status === 'diverifikasi' ? 'diproses' : 'selesai', catatan: '' });
@@ -44,11 +50,12 @@ const fmt = (d) => new Date(d).toLocaleString('id-ID', { day: 'numeric', month: 
                     <div class="rounded-2xl border border-gray-200/70 bg-white p-5 shadow-sm sm:p-6">
                         <p class="mb-3 text-xs font-bold uppercase tracking-wide text-gray-400">Foto bukti ({{ item.foto?.length ?? 0 }}) — periksa keasliannya</p>
                         <div v-if="item.foto?.length" class="grid grid-cols-2 gap-2 sm:grid-cols-3">
-                            <a v-for="ft in item.foto" :key="ft.id" :href="`/storage/${ft.path_file}`" target="_blank" class="group overflow-hidden rounded-xl ring-1 ring-gray-200">
-                                <img :src="`/storage/${ft.path_file}`" class="h-44 w-full object-cover transition duration-300 group-hover:scale-105" loading="lazy" />
-                            </a>
+                            <button v-for="(ft, i) in item.foto" :key="ft.id" type="button" @click="openFoto = i" class="group overflow-hidden rounded-xl ring-1 ring-gray-200">
+                                <img :src="fotoUrl(ft)" :alt="ft.original_name" class="h-44 w-full object-cover transition duration-300 group-hover:scale-105" loading="lazy" />
+                            </button>
                         </div>
                         <p v-else class="rounded-xl bg-amber-50 p-4 text-sm font-medium text-amber-800 ring-1 ring-inset ring-amber-100">Pelapor tidak melampirkan foto. Pertimbangkan meminta info tambahan.</p>
+                        <Lightbox :images="fotoImages" :open="openFoto !== null" :start="openFoto ?? 0" @close="openFoto = null" />
                     </div>
                     <div class="rounded-2xl border border-gray-200/70 bg-white p-5 shadow-sm sm:p-6">
                         <h3 class="font-extrabold">Riwayat singkat</h3>

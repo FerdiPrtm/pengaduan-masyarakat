@@ -1,9 +1,10 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import InputError from '@/Components/InputError.vue';
+import Lightbox from '@/Components/Lightbox.vue';
 import StatusBadge from '@/Components/StatusBadge.vue';
-import { Head, Link, useForm, usePage } from '@inertiajs/vue3';
-import { computed } from 'vue';
+import { Head, Link, router, useForm, usePage } from '@inertiajs/vue3';
+import { computed, ref } from 'vue';
 import { STATUS_FLOW as flow, STATUS_LABEL as statusLabel } from '@/lib/status.js';
 
 const props = defineProps({ item: Object });
@@ -11,15 +12,24 @@ const user = computed(() => usePage().props.auth.user);
 const isPetugas = computed(() => ['petugas', 'admin'].includes(user.value.role));
 const isOwner = computed(() => user.value.id === props.item.user_id);
 
+const fotoUrl = (ft) => route('pengaduan.foto', [props.item.id, ft.id]);
+const fotoImages = computed(() => props.item.foto?.map((f) => ({ url: fotoUrl(f), original_name: f.original_name })) ?? []);
+const openFoto = ref(null);
+
 const edit = useForm({
+    _method: 'PUT',
     kategori_id: props.item.kategori_id,
     judul: props.item.judul,
     deskripsi: props.item.deskripsi,
     lokasi: props.item.lokasi,
     latitude: props.item.latitude ?? '',
     longitude: props.item.longitude ?? '',
-    _method: 'PUT',
+    foto: [],
 });
+
+const hapusFoto = (ft) => {
+    router.delete(route('pengaduan.foto.destroy', [props.item.id, ft.id]), { preserveScroll: true });
+};
 
 const stepIdx = computed(() => flow.indexOf(props.item.status));
 const inFlow = computed(() => stepIdx.value >= 0);
@@ -35,6 +45,10 @@ const inputCls = 'block w-full rounded-xl border-gray-200 text-sm shadow-sm focu
             <div class="mt-2 flex flex-wrap items-center gap-3">
                 <h2 class="font-mono text-2xl font-extrabold tracking-tight">{{ item.nomor_tiket }}</h2>
                 <StatusBadge :status="item.status" />
+                <button @click="window.print()" class="ml-auto inline-flex items-center gap-1.5 rounded-xl border border-gray-300 bg-white px-3 py-1.5 text-xs font-bold text-gray-600 shadow-sm transition hover:bg-gray-100">
+                    <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8" rx="1"/></svg>
+                    Cetak
+                </button>
             </div>
         </template>
 
@@ -71,10 +85,11 @@ const inputCls = 'block w-full rounded-xl border-gray-200 text-sm shadow-sm focu
                         <div v-if="item.foto?.length" class="mt-5">
                             <p class="mb-2 text-xs font-bold uppercase tracking-wide text-gray-400">Bukti foto ({{ item.foto.length }})</p>
                             <div class="grid grid-cols-2 gap-2 sm:grid-cols-3">
-                                <a v-for="ft in item.foto" :key="ft.id" :href="`/storage/${ft.path_file}`" target="_blank" class="group overflow-hidden rounded-xl ring-1 ring-gray-200">
-                                    <img :src="`/storage/${ft.path_file}`" class="h-36 w-full object-cover transition duration-300 group-hover:scale-105" loading="lazy" />
-                                </a>
+                                <button v-for="(ft, i) in item.foto" :key="ft.id" type="button" @click="openFoto = i" class="group relative overflow-hidden rounded-xl ring-1 ring-gray-200">
+                                    <img :src="fotoUrl(ft)" :alt="ft.original_name" class="h-36 w-full object-cover transition duration-300 group-hover:scale-105" loading="lazy" />
+                                </button>
                             </div>
+                            <Lightbox :images="fotoImages" :open="openFoto !== null" :start="openFoto ?? 0" @close="openFoto = null" />
                         </div>
                     </article>
 
@@ -96,7 +111,19 @@ const inputCls = 'block w-full rounded-xl border-gray-200 text-sm shadow-sm focu
                             <input v-model="edit.judul" aria-label="Judul" :class="inputCls" />
                             <textarea v-model="edit.deskripsi" rows="4" aria-label="Deskripsi" :class="inputCls" />
                             <input v-model="edit.lokasi" aria-label="Lokasi" :class="inputCls" />
-                            <InputError :message="edit.errors.judul || edit.errors.deskripsi" />
+                            <div>
+                                <label class="text-xs font-bold uppercase tracking-wide text-gray-500">Tambah bukti foto baru (maks. 5 total)</label>
+                                <input type="file" multiple accept="image/*" aria-label="Foto baru" class="mt-2 block w-full text-sm" @change="edit.foto = [...$event.target.files]" />
+                                <p class="mt-1 text-xs text-gray-400" v-if="item.foto?.length >= 5">Maksimal 5 foto. Hapus foto lama untuk menambah yang baru.</p>
+                            </div>
+                            <div v-if="item.foto?.length" class="flex flex-wrap gap-2">
+                                <span v-for="ft in item.foto" :key="ft.id" class="inline-flex items-center gap-1.5 rounded-lg bg-white px-2.5 py-1 text-xs font-semibold text-gray-700 ring-1 ring-gray-200">
+                                    <img :src="fotoUrl(ft)" class="size-6 rounded object-cover" :alt="ft.original_name" />
+                                    <span class="max-w-24 truncate">{{ ft.original_name }}</span>
+                                    <button type="button" class="ml-1 font-bold text-red-500 hover:text-red-700" :disabled="item.foto.length <= 1" :title="item.foto.length <= 1 ? 'Sisakan minimal satu foto' : 'Hapus foto'" @click="hapusFoto(ft)">✕</button>
+                                </span>
+                            </div>
+                            <InputError :message="edit.errors.judul || edit.errors.deskripsi || edit.errors.foto" />
                             <button :disabled="edit.processing" class="rounded-xl bg-purple-700 px-6 py-2.5 text-sm font-bold text-white transition hover:bg-purple-800 disabled:opacity-50">{{ edit.processing ? 'Mengirim…' : 'Simpan & Kirim Ulang' }}</button>
                         </form>
                     </div>
